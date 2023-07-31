@@ -96,6 +96,7 @@ class Scheduler extends Component {
         updateEventEnd: PropTypes.func,
         moveEvent: PropTypes.func,
         movingEvent: PropTypes.func,
+        viewSwitch: PropTypes.string,
         leftCustomHeader: PropTypes.object,
         rightCustomHeader: PropTypes.object,
         newEvent: PropTypes.func,
@@ -169,7 +170,7 @@ class Scheduler extends Component {
     }
 
     render() {
-        const { schedulerData, leftCustomHeader, rightCustomHeader } = this.props;
+        const { schedulerData, viewSwitch, leftCustomHeader, rightCustomHeader } = this.props;
         const { viewType, renderData, showAgenda, config } = schedulerData;
         const width = schedulerData.getSchedulerWidth();
 
@@ -311,6 +312,7 @@ class Scheduler extends Component {
                     goBack={this.goBack}
                     rightCustomHeader={rightCustomHeader}
                     leftCustomHeader={leftCustomHeader}
+                    viewSwitch={viewSwitch}
                 />
             );
         }
@@ -451,6 +453,7 @@ class Scheduler extends Component {
     }
 
     onViewChange = (e) => {
+        console.log('onViewChange', e)
         const { onViewChange, schedulerData } = this.props;
         let viewType = parseInt(e.target.value.charAt(0));
         let showAgenda = e.target.value.charAt(1) === '1';

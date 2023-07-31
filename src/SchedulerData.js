@@ -54,11 +54,11 @@ export default class SchedulerData {
         this.setViewType(this.viewType, this.showAgenda, this.isEventPerspective)
     }
 
-    setCalendarPopoverLocale(lang) {
+    /*setCalendarPopoverLocale(lang) {
         if (!!lang && typeof lang === 'string') {
             this.calendarPopoverLocale = require(`antd/locale/${lang}.js`)
         }
-    }
+    }*/
 
     setResources(resources) {
         this._validateResource(resources);

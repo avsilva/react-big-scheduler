@@ -1,11 +1,52 @@
 import React, { Component } from 'react'
 import { PropTypes } from 'prop-types'
-import { Col, Row, Spin, Radio, Space, Popover, Calendar } from 'antd';
+import { Col, Row, Spin, Radio, Space, Popover, Calendar, Slider } from 'antd';
 import { RightOutlined, LeftOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { DATE_FORMAT } from '.';
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
+
+
+const CenterCustomHeader = (props) => {
+
+    const { view } = props;
+
+    console.log('CenterCustomHeader', view);
+    const marks = {
+      0: {
+        style: {
+          color: '#3D90FF',
+        },
+        label: view === 0 ? <strong>Day</strong> : 'Day',
+      },
+      1: {
+        style: {
+          color: '#3D90FF',
+        },
+        label: view === 1 ? <strong>Week</strong> : 'Week',
+      },
+      2: {
+        style: {
+          color: '#3D90FF',
+        },
+        label: view === 2 ? <strong>Month</strong> : 'Month',
+      }
+    }
+          
+    return (
+    <Slider 
+      max={2}
+      marks={marks} 
+      step={null} 
+      defaultValue={1} 
+      included={false}
+      {...props}
+      //onChange={this.onsliderChange}
+    />
+    )
+  
+  }
 
 class SchedulerHeader extends Component {
     constructor(props) {
@@ -25,10 +66,12 @@ class SchedulerHeader extends Component {
         schedulerData: PropTypes.object.isRequired,
         leftCustomHeader: PropTypes.object,
         rightCustomHeader: PropTypes.object,
+        viewSwitch: PropTypes.string,
     }
 
     render() {
-        const { leftCustomHeader, rightCustomHeader, goBack, goNext, schedulerData, onViewChange, onSelectDate } = this.props;
+        const { viewSwitch, leftCustomHeader, rightCustomHeader, goBack, goNext, schedulerData, onViewChange, onSelectDate } = this.props;
+        
         const { viewType, showAgenda, isEventPerspective, config } = schedulerData;
         let dateLabel = schedulerData.getDateLabel();
         let selectDate = schedulerData.getSelectedDate();
@@ -79,18 +122,41 @@ class SchedulerHeader extends Component {
                         </Space>
                     </div>
                 </Col>
+                
+                
+               
+                
                 <Col>
                     <Space>
                         <Spin spinning={this.state.viewSpinning} />
-                        <RadioGroup
-                            buttonStyle="solid"
-                            defaultValue={defaultValue}
-                            size="default"
-                            onChange={(event) => {
-                                this.handleEvents(onViewChange, true, event)
-                            }}>
-                            {radioButtonList}
-                        </RadioGroup>
+                        
+                        {
+                            viewSwitch === 'slider' ?
+                            <div style={{ width: 250 }}>
+                            <CenterCustomHeader 
+                                view={schedulerData.viewType}
+                                onChange={(_val) => {
+                                    console.log('_val', _val);
+                                    const e = {};
+                                    e.target = {};
+                                    e.target.value = `${_val}00`
+                                    this.handleEvents(onViewChange, true, e)
+                                }}
+                            />
+                            </div>
+                            :
+                            <RadioGroup
+                                buttonStyle="solid"
+                                defaultValue={defaultValue}
+                                size="default"
+                                onChange={(event) => {
+                                    console.log('event', event);
+                                    this.handleEvents(onViewChange, true, event)
+                                }}>
+                                {radioButtonList}
+                            </RadioGroup>
+                        }
+                        
                     </Space>
                 </Col>
                 {rightCustomHeader}
