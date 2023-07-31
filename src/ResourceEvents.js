@@ -204,8 +204,8 @@ class ResourceEvents extends Component {
                 }
             });
         }
-
-        if (hasConflict) {
+        
+        if (hasConflict && schedulerData.viewType === 0) {
             const { conflictOccurred } = this.props;
             if (conflictOccurred != undefined) {
                 conflictOccurred(schedulerData, 'New', {
