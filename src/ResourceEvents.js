@@ -191,9 +191,15 @@ class ResourceEvents extends Component {
         });
 
         let hasConflict = false;
+        let crossDayConflict = false;
         if (config.checkConflict) {
             let start = localeDayjs(new Date(startTime)),
                 end = localeDayjs(endTime);
+
+            console.log('aqui', start.date(), end.date());
+            if (start.date() !== end.date()){
+                crossDayConflict = true;
+            }
 
             events.forEach((e) => {
                 if (schedulerData._getEventSlotId(e) === slotId) {
@@ -204,8 +210,10 @@ class ResourceEvents extends Component {
                 }
             });
         }
-        
-        if (hasConflict && schedulerData.viewType === 0) {
+
+        if (crossDayConflict) {
+            console.log('Conflict occurred, start day must be same as end day');
+        } else if (hasConflict && schedulerData.viewType === 0) {
             const { conflictOccurred } = this.props;
             if (conflictOccurred != undefined) {
                 conflictOccurred(schedulerData, 'New', {
